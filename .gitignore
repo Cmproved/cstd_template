@@ -3,6 +3,7 @@
 
 # Object files
 *.o
+*.o_debug
 *.ko
 *.obj
 *.elf
@@ -50,3 +51,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# tag files
+tags
