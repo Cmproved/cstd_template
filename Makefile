@@ -1,15 +1,19 @@
 CC=gcc
 
 NAME=libcstd<lib>.a
+MAIN_NAME=libtest
+TEST_NAME=unitest
 
-SRC = src/
+SRC=src/
+UNITTEST_SRC=tests/unitest/
+CFLAGS += -O3 -Ofast -Wall
 
-CFLAGS 	+= -O3 -Ofast -Wall
-
-CFLAGS_DEBUG += ${CFLAGS} -g2 -fanalyzer -Wextra -Wundef
+CFLAGS_DEBUG += -Wall -Werror -g2 -fanalyzer -Wextra -Wundef
 
 OBJ=${patsubst %c, %o, ${SRC}}
 OBJ_DEBUG=${patsubst %c, %o_debug, ${SRC}}
+
+OBJ_TEST=${patsubst %c, %o_debug, ${UNITTEST}}
 
 RM=rm -rf
 
@@ -27,14 +31,15 @@ ${NAME}: ${OBJ}
 debug: ${OBJ_DEBUG}
 	ar rc ${NAME} $^
 
-tests: debug
-	gcc ${CFLAGS_DEBUG} tests/main.c -L. -lcstdlist
+tests: debug ${OBJ_TEST}
+	gcc ${CFLAGS_DEBUG} tests/main.c -L. -l<lib>
+	gcc ${CFLAGS_DEBUG} ${OBJ_TEST} -L. -l<lib> -l <unit lib> -o unittest
 
 clean:
-	${RM} ${OBJ} ${OBJ_DEBUG}
+	${RM} ${OBJ} ${OBJ_DEBUG} ${OBJ_TEST}
 
 fclean: clean
-	${RM} ${NAME} a.out
+	${RM} ${NAME} ${MAIN_NAME} ${TEST_NAME}
 
 re: fclean all
 
